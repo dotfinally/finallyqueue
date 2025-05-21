@@ -1,0 +1,46 @@
+services:
+  app:
+    build: .
+    container_name: node-queue-app
+    env_file: .env
+    depends_on:
+      - mongo
+      - redis
+    volumes:
+      - .:/app
+    ports:
+      - "${APP_PORT}:3000"
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    networks:
+      - finallyqueue
+
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    restart: "on-failure"
+    ports:
+      - "${MONGO_PORT}:27017"
+    environment:
+      MONGO_INITDB_DATABASE: finallyqueue
+    volumes:
+      - ./data/db:/data/db
+    networks:
+      - finallyqueue
+
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
+    ports:
+      - "${REDIS_PORT}:6379"
+    networks:
+      - finallyqueue
+
+volumes:
+  mongo_data:
+
+networks:
+  finallyqueue:
+    driver: bridge

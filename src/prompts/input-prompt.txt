@@ -1,0 +1,13 @@
+Analyze the input message and provide a list of books recommendations based on the user characteristics.
+
+Example input:
+{
+  age: 20,
+  genres: fantasy, sci-fi, tech,
+  personality: introvert,
+  hobbies: video games, movies, programming
+  ...other
+}
+
+The output should be a list of books.
+Maximum 5 books.

@@ -1,0 +1,34 @@
+{
+  "name": "finallyqueue",
+  "version": "0.0.1",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/consumer.js",
+    "docker": "npm run build && docker-compose up --build -d",
+    "test": "npm run build && node dist/testMessage.js"
+  },
+  "keywords": [
+    "AI",
+    "Queue",
+    "NodeJS",
+    "TypeScript"
+  ],
+  "author": "dotfinally, LLC",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@google/genai": "^1.0.0",
+    "bullmq": "^5.52.2",
+    "dotenv": "^16.5.0",
+    "mongodb": "^6.16.0",
+    "openai": "^4.100.0",
+    "uuid": "^11.1.0",
+    "zod": "^3.25.12"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.18",
+    "typescript": "^5.8.3"
+  }
+}
