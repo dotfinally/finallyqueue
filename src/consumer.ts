@@ -27,22 +27,20 @@ async function processJob(job: Job) {
   const id = job.id || uuidv4();
   const prompt = await fs.readFile(path.resolve("../prompts/input-prompt.txt"), "utf-8")
 
-  executeAI({
+  const aiResult = await executeAI({
     prompt,
     schema,
     data: job.data.message,
-  }).then((aiResult) => {
-    // Log the result in the database
-    // And do anything else you want with that data here
+  });
 
-    console.log('aiResult', aiResult);
+  // Log the result in the database
+  // And do anything else you want with that data here
 
-    logJobData({
-      id,
-      ...(aiResult || {}),
-    }).then(() => {
-      console.log(`Finished processing job ${id}`);
-    });
+  console.log('aiResult', aiResult);
+
+  await logJobData({
+    id,
+    ...(aiResult || {}),
   });
 }
 

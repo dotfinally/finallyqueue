@@ -13,6 +13,7 @@
 ## Setup
 - Copy the `.env.example` file to `.env` and fill in the necessary variables
 - Populate either the Gemini or OpenAI API keys
+- Find all and replace the word "finallyqueue" with your project name
 - Update ./src/prompts/input-prompt.txt
 - Update ./src/prompts/output-schema.ts
 
