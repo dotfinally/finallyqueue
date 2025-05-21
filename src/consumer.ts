@@ -28,7 +28,6 @@ async function processJob(job: Job) {
   const prompt = await fs.readFile(path.resolve("../prompts/input-prompt.txt"), "utf-8")
 
   executeAI({
-    engine: "gemini",
     prompt,
     schema,
     data: job.data.message,

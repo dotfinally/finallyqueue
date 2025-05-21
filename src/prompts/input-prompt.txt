@@ -11,3 +11,5 @@ Example input:
 
 The output should be a list of books.
 Maximum 5 books.
+Each book will have bookName, bookSeries, and bookDescription.
+If no series, set it to a empty string.

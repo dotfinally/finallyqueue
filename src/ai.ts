@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import OpenAI from "openai";
+import { zodResponseFormat } from "openai/helpers/zod";
 
 export type Role = "system" | "user" | "assistant" | string;
 export interface Message {
@@ -16,7 +17,8 @@ export interface ExecuteAIOptions {
 }
 
 export async function executeAI(options: ExecuteAIOptions): Promise<any> {
-  const engine = options.engine ?? "gemini";
+  const engine =
+    options.engine ?? !!process.env.GEMINI_API_KEY ? "gemini" : "openai";
 
   // 1) Load the prompt
   const rawPrompt = options.prompt;
@@ -34,38 +36,36 @@ export async function executeAI(options: ExecuteAIOptions): Promise<any> {
   }
 
   // 4) Build the message
-  const messages: Message[] = [
-    { role: "user", content: prompt }
-  ];
+  const messages: Message[] = [{ role: "user", content: prompt }];
+
+  let model;
 
   try {
-    let aiResponseText: string;
+    let aiResponseText = '';
 
     if (engine === "openai") {
       const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+      model = options.model || "gpt-4o-mini-2024-07-18";
       const req: any = {
-        model: options.model || "gpt-4o-mini-2024-07-18",
-        messages
+        model,
+        messages,
       };
       if (schema) {
-        req.response_format = {
-          type: "json_schema",
-          json_schema: { name: "response", schema, strict: true }
-        };
+        req.response_format = zodResponseFormat(schema, "response");
       }
-      const res = await openai.chat.completions.create(req);
-      aiResponseText = res.choices?.[0]?.message?.content || "";
-
-    } else {
+      const completion = await openai.beta.chat.completions.parse(req);
+      aiResponseText = completion.choices[0].message.content || "";
+    } else if (engine === "gemini") {
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      model = options.model || "gemini-2.0-flash"
       const req: any = {
-        model: options.model || "gemini-2.0-flash",
-        contents: prompt
+        model,
+        contents: prompt,
       };
       if (schema) {
         req.config = {
           responseMimeType: "application/json",
-          responseSchema: schema
+          responseSchema: schema,
         };
       }
       const res = await ai.models.generateContent(req);
@@ -78,28 +78,33 @@ export async function executeAI(options: ExecuteAIOptions): Promise<any> {
       dataUpdated = JSON.parse(aiResponseText);
     } catch {
       return {
+        engine,
+        model,
         data,
         prompt,
         dataUpdated: null,
         error: "Invalid JSON from AI",
-        raw: aiResponseText
+        raw: aiResponseText,
       };
     }
 
     // 6) Success
     return {
+      engine,
+      model,
       data,
       prompt,
-      dataUpdated
+      dataUpdated,
     };
-
   } catch (err: any) {
     // request or other error
     return {
+      engine,
+      model,
       data,
       prompt,
       dataUpdated: null,
-      error: err.message || String(err)
+      error: err.message || String(err),
     };
   }
 }

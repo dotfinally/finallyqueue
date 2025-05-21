@@ -1,3 +1,5 @@
+// Example for Gemini:
+
 import { Type } from "@google/genai";
 
 export default {
@@ -19,19 +21,17 @@ export default {
   },
 };
 
-/**
-  // Example for OpenAI:
 
-  import { z } from "zod";
+// Example for OpenAI:
 
-  const Book = z.object({
-    bookName: z.string(),
-    bookSeries: z.string(),
-    bookDescription: z.string()
-  });
+// import { z } from "zod";
 
-  export default z.object({
-    books: z.array(Book),
-    final_answer: z.string(),
-  });
-**/
+// const Book = z.object({
+//   bookName: z.string(),
+//   bookSeries: z.string(),
+//   bookDescription: z.string(),
+// });
+
+// export default z.object({
+//   books: z.array(Book),
+// });
