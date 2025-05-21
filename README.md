@@ -5,7 +5,7 @@
 - A queue system using BullMQ (which uses Redis)
 - Analyze every queue message with an AI LLM (e.g. with Gemini or OpenAI)
 - Log all requests including the AI output
-- Custom logic for the processed message
+- Add extra custom logic for the processed message
 - Database integration (MongoDB by default)
 - Dockerfile and Compose files for easy deployments
 - Modular and reusable framework so you can deploy multiple AI queue microservices
